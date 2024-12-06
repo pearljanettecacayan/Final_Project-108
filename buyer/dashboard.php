@@ -11,7 +11,7 @@ if (!isset($_SESSION['buyerid'])) {
 $buyerid=$_SESSION['buyerid'];
 
 // Fetch all categories
-$categorySql = "SELECT * FROM categories"; // Assuming you have a categories table
+$categorySql = "SELECT * FROM categories"; 
 $categoryStmt = $db->prepare($categorySql);
 $categoryStmt->execute();
 $categories = $categoryStmt->fetchAll(PDO::FETCH_ASSOC);

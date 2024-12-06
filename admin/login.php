@@ -1,6 +1,3 @@
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -112,7 +109,7 @@
         </div>
         <h1 class="text-center">Welcome to FitFusion</h1>
         <h5>Login to Your Account</h5>
-        <form action="../serverdb/loginSellerdb.php" method="post">
+        <form action="../serverdb/loginAdmindb.php" method="post">
             <label for="email">Email</label>
             <div class="input-container">
                 <i class="fas fa-envelope input-icon"></i>

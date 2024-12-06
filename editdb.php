@@ -3,56 +3,73 @@ include 'serverdb/connectSeller.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get form data
+    $product_id = $_POST['productID'];
     $product_name = $_POST['productName'];
     $product_description = $_POST['productDescription'];
     $price = $_POST['productPrice'];
     $product_category = $_POST['productCategory'];
-    $is_available = true; 
 
-    // Handle image upload
-    if (isset($_FILES['productImage'])) {
-        $file = $_FILES['productImage'];
+    try {
+        // Fetch existing product details, including the current image path
+        $stmt = $db->prepare("SELECT image FROM PRODUCTS WHERE productid = ?");
+        $stmt->execute([$product_id]);
+        $product = $stmt->fetch(PDO::FETCH_ASSOC);
+        $currentImagePath = $product['image'];
 
-        $fileName = $_FILES['productImage']['name'];
-        $fileTmpName = $_FILES['productImage']['tmp_name'];
-        $fileSize = $_FILES['productImage']['size'];
-        $fileError = $_FILES['productImage']['error'];
-        $fileType = $_FILES['productImage']['type'];
+        // Check if a new image is uploaded
+        $product_image = $currentImagePath; // Default to the existing image
+        if (isset($_FILES['productImage']) && $_FILES['productImage']['error'] === UPLOAD_ERR_OK) {
+            $file = $_FILES['productImage'];
+            $fileName = $file['name'];
+            $fileTmpName = $file['tmp_name'];
+            $fileSize = $file['size'];
+            $fileError = $file['error'];
+            $fileType = $file['type'];
 
-        $fileExt = explode('.', $fileName);
-        $fileActualExt = strtolower(end($fileExt));
+            $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+            $allowed = array('jpg', 'jpeg', 'png');
 
-        $allowed = array('jpg', 'jpeg', 'png');
-
-        if (in_array($fileActualExt, $allowed)) {
-            if ($fileError === 0) {
+            if (in_array($fileExt, $allowed)) {
                 if ($fileSize < 1000000) { // 1MB limit
-                    $fileNameNew = uniqid('', true) . "." . $fileActualExt;
+                    $fileNameNew = uniqid('', true) . "." . $fileExt;
                     $fileDestination = 'images/' . $fileNameNew;
 
                     if (move_uploaded_file($fileTmpName, $fileDestination)) {
-                        // Store the image path to be inserted into the database
-                        $product_image = $fileDestination;
-
-                        // Insert data into the database
-                        $stmt = $db->prepare("INSERT INTO PRODUCTS (productname, description, price, categoryid, image) VALUES (?, ?, ?, ?, ?)");
-                        $stmt->execute([$product_name, $product_description, $price, $product_category, $product_image]);
-
-                        // Redirect to the admin page
-                        header('Location: http://localhost/Final_project-108/seller/dashboard.php');
-                        exit();
+                        $product_image = $fileDestination; // Update to the new image path
                     } else {
-                        echo "Sorry, there was an error uploading your file.";
+                        echo "Error uploading the new image.";
+                        exit();
                     }
                 } else {
-                    echo "Your file is too big.";
+                    echo "New image file size is too large.";
+                    exit();
                 }
             } else {
-                echo "Error uploading file.";
+                echo "Invalid file type for the new image.";
+                exit();
             }
-        } else {
-            echo "Invalid file type for fashion image.";
         }
+
+        // Update the product details in the database
+        $updateStmt = $db->prepare(
+            "UPDATE PRODUCTS 
+            SET productname = ?, description = ?, price = ?, categoryid = ?, image = ? 
+            WHERE productid = ?"
+        );
+        $updateStmt->execute([
+            $product_name,
+            $product_description,
+            $price,
+            $product_category,
+            $product_image,
+            $product_id
+        ]);
+
+        // Redirect to the admin page
+        header('Location: http://localhost/Final_project-108/seller/dashboard.php');
+        exit();
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
     }
 } else {
     header('Location: http://localhost/Final_project-108/seller/dashboard.php');

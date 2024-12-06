@@ -141,7 +141,7 @@ $product = $productStmt->fetch(PDO::FETCH_ASSOC);
             <?php } ?>
             
             <label for="productImage">Choose New Image (Optional)</label>
-            <input type="file" id="productImage" name="productImage" accept="image/*">
+            <input type="file" id="productImage" name="productImage" value="<?php echo htmlspecialchars($product['image']); ?>" accept="image/*">
 
             <!-- Product Name -->
             <label for="productName">Product Name</label>
@@ -154,6 +154,9 @@ $product = $productStmt->fetch(PDO::FETCH_ASSOC);
             <!-- Price -->
             <label for="productPrice">Price</label>
             <input type="number" id="productPrice" name="productPrice" value="<?php echo htmlspecialchars($product['price']); ?>" required>
+
+            <input type="hidden" id="productPrice" name="productID" value="<?php echo htmlspecialchars($product['productid']); ?>" required>
+            <input type="hidden" id="productPrice" name="productCategory" value="<?php echo htmlspecialchars($product['categoryid']); ?>" required>
 
             <!-- Submit Button -->
             <button type="submit" class="form-button">Save Changes</button>

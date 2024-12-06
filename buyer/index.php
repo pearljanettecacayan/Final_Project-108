@@ -101,27 +101,25 @@
             z-index: 1000;
         }
 
-        .header nav {
-            margin-left: auto; 
-            display: flex;
-            gap: 10px;
-        }
-
-        .header a {
+        .container a {
             text-decoration: none;
             color: white;
+            background-color: #A87676;
             font-weight: bold;
             font-size: 16px;
             padding: 10px 10px;
             border-radius: 4px;
             transition: all 0.3s ease;
+            margin: 5px;
         }
 
-        .header a:hover {
+        .container a:hover {
             background-color: #CA8787;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8); 
-            transform: scale(1.05); 
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 255, 255, 0.6); 
+            transform: scale(1.05);
+            color: #fff; 
         }
+
 
         .hero {
             position: relative;
@@ -147,7 +145,7 @@
 
         .hero p {
             font-size: 1.2em;
-            margin-bottom: 20px;
+            margin-bottom: 40px;
         }
 
         .hero-waves {
@@ -201,13 +199,9 @@
             object-fit: cover;
         }
 
-        .gradient-text {
-            background: linear-gradient(45deg, white,black,  #A87676, black, #CA8787, black, #CA8787, black, white);
-            -webkit-background-clip: text;  
-        background-clip: text;         
-        color: transparent;            
-    }
-
+        .motiv{
+            color: #E5E1DA;
+        }
     </style>
 </head>
 <body>   
@@ -217,12 +211,6 @@
         <img src="../images/logo.png" class="logo-image">
         FitFusion
     </div>
-
-    <!-- Navigation links (aligned to the right) -->
-    <nav>
-        <a href="register.php" class="btn-get-started"><b>Get Started</b></a>
-        <a href="login.php"><b>Login</b></a>
-    </nav>
 </header>
 
 <!-- Hero Section -->
@@ -233,8 +221,13 @@
         <div class="text-video-container">
            <!-- Text section -->
         <div class="text">
-        <h1 class="gradient-text">Elevate Your Style with <span>FitFusion</span></h1>
-        <p>Step up your fashion game with our collection of stylish. Our designs will keep you looking and feeling your best!</p>
+        <h1 class="motiv">F I T F U S I O N</h1>
+        <p>Focused, Inspired, Tenacious, Fearless, Unstoppable, Strong, Innovative, Outstanding, Never-give-up</p>
+           <!-- Navigation links (aligned to the right) -->
+    <nav>
+        <a href="register.php" class="btn-get-started"><b>Get Started</b></a>
+        <a href="login.php"><b>Login</b></a>
+    </nav>
         </div>
 
 

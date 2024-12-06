@@ -144,7 +144,7 @@ foreach ($products as $product) {
             font-family: 'Arial', sans-serif;
             font-size: 2rem;
             margin-bottom: 10px;
-            color: #333;
+            color: #E5E1DA;
         }
 
         .welcome-banner p {
@@ -299,8 +299,6 @@ foreach ($products as $product) {
         <h1>Welcome, Fashion Seller!</h1>
         <p>Manage your collections and connect with customers to grow your business. Let's make your fashion store shine!</p>
         </div>
-
-        
 
         <!-- Add a fullscreen image modal -->
         <div id="fullscreenImage" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); justify-content: center; align-items: center; z-index: 1000;">
