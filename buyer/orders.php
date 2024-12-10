@@ -10,7 +10,7 @@ if (!isset($_SESSION['buyerid'])) {
 
 $buyerid = $_SESSION['buyerid'];
 
-$sql = "SELECT p.image, p.productname, p.price, o.status, o.orderdate 
+$sql = "SELECT o.orderid, p.image, p.productname, p.price, o.status, o.orderdate 
         FROM orders o 
         JOIN products p ON o.productid = p.productid
         JOIN buyer b ON b.buyerid = o.buyerid
@@ -143,6 +143,15 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
         .pending-status {
             color: green;
         }
+
+        .delete-button {
+            background-color: #A87676;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -169,18 +178,25 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <th>Product Name</th>
                 <th>Price</th>
                 <th>Date</th>
-                <th>Status</th> 
+                <th>Status</th>
+                <th>Actions</th> 
             </tr>
         </thead>
         <tbody id="cart-items">
             <?php foreach ($products as $product): ?>
                 <tr>
-                    <td><img src="../<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($food['productname']); ?>"></td>
+                    <td><img src="../<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['productname']); ?>"></td>
                     <td><?php echo htmlspecialchars($product['productname']); ?></td>
                     <td><?php echo htmlspecialchars($product['price']); ?></td>
                     <td><?php echo htmlspecialchars($product['orderdate']); ?></td>
                     <td class="<?php echo $product['status'] == 'pending' ? 'pending-status' : ''; ?>">
                         <?php echo htmlspecialchars($product['status']); ?>
+                    </td>
+                    <td>
+                        <form action="delete_order.php" method="POST" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                            <input type="hidden" name="orderid" value="<?php echo htmlspecialchars($product['orderid']); ?>">
+                            <button type="submit" class="delete-button">Delete</button>
+                        </form>
                     </td>
                 </tr>
             <?php endforeach; ?>

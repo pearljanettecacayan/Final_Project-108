@@ -169,6 +169,14 @@ foreach ($products as $product) {
             color: #E5E1DA;
         }
 
+        .welcome-banner p {
+            font-family: 'Georgia', serif;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin: 0;
+            color:  #343131;
+        }
+
 
         .category {
             margin-bottom: 40px;
@@ -261,39 +269,38 @@ foreach ($products as $product) {
         }
 
         .carousel {
-        position: relative;
-        margin: 0 auto 30px;
-        overflow: hidden;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            }
+            position: relative;
+            margin: 0 auto 30px;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
 
-            .carousel-inner {
-                display: flex;
-                transition: transform 0.5s ease-in-out;
-            }
+        .carousel-inner {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
 
-            .carousel-item {
+        .carousel-item {
             min-width: 100%;
             height: 60vh; 
             object-fit: cover;
         }
 
 
-            .carousel-controls {
-                position: absolute;
-                top: 50%;
-                width: 100%;
-                display: flex;
-                justify-content: space-between;
-                transform: translateY(-50%);
-                pointer-events: none;
-            }
-
-            .prev, .next {
-            display: none; 
+        .carousel-controls {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+            pointer-events: none;
         }
 
+        .prev, .next {
+            display: none; 
+        }
     </style>
 </head>
 <body>   
@@ -316,7 +323,8 @@ foreach ($products as $product) {
         <!-- Welcome Banner -->
     <div class="welcome-banner">
         <h1>Welcome, <?php echo htmlspecialchars($admin['firstname'] . ' ' . $admin['lastname']); ?>!</h1>
-    </div>
+        <p>Shop exclusive fashion at FITFUSION. Discover exclusive offers and Find your style today!</p>
+        </div>
 
     <!-- Carousel Section -->
     <div class="carousel">

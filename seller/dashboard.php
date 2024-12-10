@@ -132,7 +132,7 @@ foreach ($products as $product) {
         
         .welcome-banner {
             background-color: #A87676;
-            color: white;
+            color: #343131;
             text-align: center;
             padding: 20px 15px;
             border: 2px solid #ddd;
