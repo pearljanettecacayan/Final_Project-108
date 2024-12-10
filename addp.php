@@ -1,6 +1,15 @@
 <?php
 include 'serverdb/connectSeller.php';
 
+session_start();
+
+if (!isset($_SESSION['sellerid'])) {
+    header('Location: ../seller/login.php');
+    exit();
+}
+
+$sellerid = $_SESSION['sellerid'];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get form data
     $product_name = $_POST['productName'];
@@ -35,6 +44,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $product_image = $fileDestination;
 
                         // Insert data into the database
+
+                        $db->exec("SET app.user_id TO $sellerid");
+                        $db->exec("SET app.user_type TO 'seller'");
+
                         $stmt = $db->prepare("INSERT INTO PRODUCTS (productname, description, price, categoryid, image) VALUES (?, ?, ?, ?, ?)");
                         $stmt->execute([$product_name, $product_description, $price, $product_category, $product_image]);
 

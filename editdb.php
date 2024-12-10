@@ -1,6 +1,15 @@
 <?php
 include 'serverdb/connectSeller.php';
 
+session_start();
+
+if (!isset($_SESSION['sellerid'])) {
+    header('Location: ../seller/login.php');
+    exit();
+}
+
+$sellerid = $_SESSION['sellerid'];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get form data
     $product_id = $_POST['productID'];
@@ -51,6 +60,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // Update the product details in the database
+        $db->exec("SET app.user_id TO $sellerid");
+        $db->exec("SET app.user_type TO 'seller'");
         $updateStmt = $db->prepare(
             "UPDATE PRODUCTS 
             SET productname = ?, description = ?, price = ?, categoryid = ?, image = ? 

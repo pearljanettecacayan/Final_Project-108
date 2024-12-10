@@ -8,12 +8,18 @@ if (!isset($_SESSION['buyerid'])) {
     exit();
 }
 
+$buyerid = $_SESSION['buyerid'];
+
 $sql = "SELECT p.image, p.productname, p.price, o.status, o.orderdate 
         FROM orders o 
-        JOIN products p ON o.productid = p.productid"; 
+        JOIN products p ON o.productid = p.productid
+        JOIN buyer b ON b.buyerid = o.buyerid
+        WHERE b.buyerid = :buyerid"; 
+
 $stmt = $db->prepare($sql);
-$stmt->execute();
+$stmt->execute([':buyerid' => $buyerid]);
 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <!DOCTYPE html>

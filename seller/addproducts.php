@@ -105,7 +105,6 @@
     </style>
 </head>
 <body>
-
     <div class="edit-form-container">
         <h2>Add Product</h2>
 
