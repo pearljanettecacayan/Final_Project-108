@@ -10,6 +10,11 @@ if (!isset($_SESSION['buyerid'])) {
 
 $buyerid=$_SESSION['buyerid'];
 
+// Fetch buyer details 
+$stmt = $db->prepare("SELECT firstname, lastname FROM BUYER WHERE BuyerID = ?");
+$stmt->execute([$buyerid]);
+$admin = $stmt->fetch(PDO::FETCH_ASSOC);
+
 // Fetch all categories
 $categorySql = "SELECT * FROM categories"; 
 $categoryStmt = $db->prepare($categorySql);
@@ -146,6 +151,25 @@ foreach ($products as $product) {
             border-color: #CA8787;
         }
 
+             
+        .welcome-banner {
+            background-color: #A87676;
+            color: white;
+            text-align: center;
+            padding: 2px 2px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .welcome-banner h1 {
+            font-family: 'Arial', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #E5E1DA;
+        }
+
+
         .category {
             margin-bottom: 40px;
         }
@@ -242,33 +266,33 @@ foreach ($products as $product) {
         overflow: hidden;
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
+            }
 
-    .carousel-inner {
-        display: flex;
-        transition: transform 0.5s ease-in-out;
-    }
+            .carousel-inner {
+                display: flex;
+                transition: transform 0.5s ease-in-out;
+            }
 
-    .carousel-item {
-    min-width: 100%;
-    height: 60vh; 
-    object-fit: cover;
-}
+            .carousel-item {
+            min-width: 100%;
+            height: 60vh; 
+            object-fit: cover;
+        }
 
 
-    .carousel-controls {
-        position: absolute;
-        top: 50%;
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        transform: translateY(-50%);
-        pointer-events: none;
-    }
+            .carousel-controls {
+                position: absolute;
+                top: 50%;
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                transform: translateY(-50%);
+                pointer-events: none;
+            }
 
-    .prev, .next {
-    display: none; 
-}
+            .prev, .next {
+            display: none; 
+        }
 
     </style>
 </head>
@@ -289,15 +313,19 @@ foreach ($products as $product) {
 </header>
 
 <div class="dashboard-container">
+        <!-- Welcome Banner -->
+    <div class="welcome-banner">
+        <h1>Welcome, <?php echo htmlspecialchars($admin['firstname'] . ' ' . $admin['lastname']); ?>!</h1>
+    </div>
 
     <!-- Carousel Section -->
     <div class="carousel">
         <div class="carousel-inner">
-            <img src="../images/image01.png" alt="Slide 1" class="carousel-item active">
-            <img src="../images/image2.png" alt="Slide 2" class="carousel-item">
-            <img src="../images/image3.png" alt="Slide 3" class="carousel-item">
-            <img src="../images/image4.png" alt="Slide 4" class="carousel-item">
-            <img src="../images/image5.png" alt="Slide 5" class="carousel-item">
+            <img src="../images/image2.png" alt="Slide 1" class="carousel-item active">
+            <img src="../images/image3.png" alt="Slide 2" class="carousel-item">
+            <img src="../images/image4.png" alt="Slide 3" class="carousel-item">
+            <img src="../images/image5.png" alt="Slide 4" class="carousel-item">
+            <img src="../images/image01.png" alt="Slide 5" class="carousel-item">
         </div>
         <!-- Carousel Controls -->
         <div class="carousel-controls">
@@ -415,29 +443,8 @@ foreach ($products as $product) {
             });
         });
 
-        // Select all images with the class 'clickable-image'
-        const images = document.querySelectorAll('.clickable-image');
-        const fullscreenImage = document.getElementById('fullscreenImage');
-        const fullscreenImg = document.getElementById('fullscreenImg');
-
-        // Add click event to each image
-        images.forEach(image => {
-            image.addEventListener('click', function() {
-                fullscreenImg.src = image.src; // Set the source of the fullscreen image
-                fullscreenImage.style.display = 'flex'; // Show the fullscreen modal
-            });
-        });
-
-        // Close the modal when clicking outside the image
-        fullscreenImage.addEventListener('click', function(e) {
-            if (e.target === fullscreenImage) {
-                fullscreenImage.style.display = 'none'; // Hide the modal
-            }
-        });
-
-
-        // Search filtering function
-        function filterCategories() {
+         // Search filtering function
+         function filterCategories() {
                 const input = document.getElementById('searchInput').value.toLowerCase();
                 const categories = document.querySelectorAll('.category');
                 categories.forEach(category => {
@@ -459,6 +466,26 @@ foreach ($products as $product) {
                     category.style.display = categoryVisible ? '' : 'none';
                 });
             }
+
+        // Select all images with the class 'clickable-image'
+        const images = document.querySelectorAll('.clickable-image');
+        const fullscreenImage = document.getElementById('fullscreenImage');
+        const fullscreenImg = document.getElementById('fullscreenImg');
+
+        // Add click event to each image
+        images.forEach(image => {
+            image.addEventListener('click', function() {
+                fullscreenImg.src = image.src; // Set the source of the fullscreen image
+                fullscreenImage.style.display = 'flex'; // Show the fullscreen modal
+            });
+        });
+
+        // Close the modal when clicking outside the image
+        fullscreenImage.addEventListener('click', function(e) {
+            if (e.target === fullscreenImage) {
+                fullscreenImage.style.display = 'none'; // Hide the modal
+            }
+        });
     </script>
 
 </body>

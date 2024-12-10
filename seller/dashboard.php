@@ -154,6 +154,24 @@ foreach ($products as $product) {
             margin: 0;
         }
 
+        .search-bar {
+            width: 50%;
+            margin: 20px auto;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #A87676;
+            color: #A87676;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: #CA8787;
+        }
 
         .category {
             margin-bottom: 40px;
@@ -252,30 +270,28 @@ foreach ($products as $product) {
         }
 
         #fullscreenImage {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
 
-#fullscreenImg {
-    max-width: 90%;
-    max-height: 90%;
-    border-radius: 10px;
-    transition: transform 0.3s ease;
-}
+        #fullscreenImg {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
 
-#fullscreenImg:hover {
-    transform: scale(1.05);
-}
-
-
+        #fullscreenImg:hover {
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>   
@@ -296,9 +312,19 @@ foreach ($products as $product) {
     <div class="dashboard-container">
         <!-- Welcome Banner -->
         <div class="welcome-banner">
-        <h1>Welcome, Fashion Seller!</h1>
-        <p>Manage your collections and connect with customers to grow your business. Let's make your fashion store shine!</p>
+            <h1>Welcome, Fashion Seller!</h1>
+            <p>Manage your collections and connect with customers to grow your business. Let's make your fashion store shine!</p>
         </div>
+
+         <!-- Search-Bar -->
+    <div class="search-bar">
+        <div style="position: relative; display: flex; align-items: center;">
+            <input type="text" id="searchInput" placeholder="Search products..." onkeyup="filterCategories()" style="padding-left: 40px;">
+            <i class="fas fa-search" style="position: absolute; left: 10px; color: #A87676; font-size: 16px;"></i>
+            <!-- Clear icon (appears only when there's input) -->
+            <i id="clearIcon" class="fas fa-times" style="position: absolute; right: 10px; color: #A87676; font-size: 16px; cursor: pointer; display: none;" onclick="clearSearch()"></i>
+        </div>
+    </div>
 
         <!-- Add a fullscreen image modal -->
         <div id="fullscreenImage" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); justify-content: center; align-items: center; z-index: 1000;">
@@ -360,6 +386,70 @@ foreach ($products as $product) {
                 fullscreenImage.style.display = 'none'; 
             }
         });
+
+        
+    // Show clear icon when there's text in the input
+    const searchInput = document.getElementById('searchInput');
+        const clearIcon = document.getElementById('clearIcon');
+
+        searchInput.addEventListener('input', function() {
+            if (searchInput.value) {
+                clearIcon.style.display = 'block'; 
+            } else {
+                clearIcon.style.display = 'none'; 
+            }
+        });
+
+        // Function to clear the search input
+        function clearSearch() {
+            searchInput.value = ''; 
+            clearIcon.style.display = 'none'; 
+            filterCategories(); 
+        }
+        const input = searchInput.value.toLowerCase();
+        const categories = document.querySelectorAll('.category');
+        categories.forEach(category => {
+            const categoryName = category.getAttribute('data-category').toLowerCase();
+            const products = category.querySelectorAll('.product-card');
+            if (categoryName.includes(input)) {
+            category.style.display = 'block';
+            } else {
+                category.style.display = 'none';
+            }
+            products.forEach(product => {
+                const productName = product.getAttribute('data-product').toLowerCase();
+                if (productName.includes(input)) {
+                    product.style.display = 'block';
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+        });
+
+         
+         // Search filtering function
+         function filterCategories() {
+                const input = document.getElementById('searchInput').value.toLowerCase();
+                const categories = document.querySelectorAll('.category');
+                categories.forEach(category => {
+                    const categoryName = category.getAttribute('data-category').toLowerCase();
+                    const products = category.querySelectorAll('.product-card');
+                    let categoryVisible = false;
+
+                    products.forEach(product => {
+                        const productDescription = product.getAttribute('data-product').toLowerCase();
+                        if (categoryName.includes(input) || productDescription.includes(input)) {
+                            product.style.display = '';
+                            categoryVisible = true;
+                        } else {
+                            product.style.display = 'none';
+                        }
+                    });
+
+                    // If no products are matching, hide the category entirely
+                    category.style.display = categoryVisible ? '' : 'none';
+                });
+            }
 
         </script>
 </body>
