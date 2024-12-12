@@ -211,7 +211,7 @@ $adminid = $_SESSION['adminid'];
     $logs = $logsStmt->fetchAll(PDO::FETCH_ASSOC);
 
     if ($logs): ?>
-        <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+        <table border="1" style="width: 100%; border-collapse: collapse; text-align: center;">
             <thead>
                 <tr>
                     <th style="padding: 8px; background-color: #A87676; color: white;">Usertype</th>
@@ -251,7 +251,7 @@ $adminid = $_SESSION['adminid'];
         $orders = $orderStmt->fetchAll(PDO::FETCH_ASSOC);
 
         if ($orders): ?>
-            <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+            <table border="1" style="width: 100%; border-collapse: collapse; text-align: center;">
                 <thead>
                     <tr>
                         <th style="padding: 8px; background-color: #A87676; color: white;">Order ID</th>
@@ -294,7 +294,7 @@ $adminid = $_SESSION['adminid'];
     $MostAvailedProducts = $topSellingStmt->fetchAll(PDO::FETCH_ASSOC);
 
     if ($MostAvailedProducts): ?>
-        <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+        <table border="1" style="width: 100%; border-collapse: collapse; text-align: center;">
             <thead>
                 <tr>
                     <th style="padding: 8px; background-color: #A87676; color: white;">Product Name</th>
@@ -328,7 +328,7 @@ $adminid = $_SESSION['adminid'];
         $products = $tableStmt->fetchAll(PDO::FETCH_ASSOC);
 
         if ($products): ?>
-            <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+            <table border="1" style="width: 100%; border-collapse: collapse; text-align: center;">
                 <thead>
                     <tr>
                         <th style="padding: 8px; background-color: #A87676; color: white;">Product ID</th>
@@ -354,8 +354,6 @@ $adminid = $_SESSION['adminid'];
             <p>No products found in the "<?php echo htmlspecialchars($categoryName); ?>" category.</p>
         <?php endif; ?>
     </div>
-
-
 </div>
 </body>
 </html>

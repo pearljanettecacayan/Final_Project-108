@@ -10,7 +10,9 @@ if (!isset($_SESSION['buyerid'])) {
 
 $buyerid = $_SESSION['buyerid'];
 
-$sql = "SELECT o.orderid, p.image, p.productname, p.price, o.status, o.orderdate 
+// Update the SQL query to format the orderdate
+$sql = "SELECT o.orderid, p.image, p.productname, p.price, o.status, 
+               TO_CHAR(o.orderdate, 'FMDay, FMMonth DD, YYYY HH24:MI:SS') AS formatted_orderdate
         FROM orders o 
         JOIN products p ON o.productid = p.productid
         JOIN buyer b ON b.buyerid = o.buyerid
@@ -111,7 +113,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
         .cart-container {
             max-width: 800px;
             margin: 0 auto;
-            background-color: white;
+            background-color: whitesmoke;
             padding: 30px 40px; 
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
@@ -154,6 +156,26 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
         .pending-status {
             color: red ;
         }
+
+        .cart-total {
+            margin-top: 20px;              
+            font-size: 1.5em;              
+            font-weight: bold;            
+            text-align: right;            
+            padding: 10px;                 
+            color: #333;                  
+        }
+
+        .cart-total strong {
+            color: #000;                  
+        }
+
+        .cart-table th, .cart-table td {
+            padding: 20px;
+            text-align: center; 
+            vertical-align: middle; 
+            border-bottom: 1px solid #ddd;
+        }
     </style>
 </head>
 <body>
@@ -185,12 +207,16 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </tr>
         </thead>
         <tbody id="cart-items">
-            <?php foreach ($products as $product): ?>
+            <?php 
+                $totalPrice = 0; // Initialize total price variable
+                foreach ($products as $product): 
+                    $totalPrice += $product['price']; // Add each product's price to total
+            ?>
                 <tr>
                     <td><img src="../<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['productname']); ?>"></td>
                     <td><?php echo htmlspecialchars($product['productname']); ?></td>
                     <td><?php echo htmlspecialchars($product['price']); ?></td>
-                    <td><?php echo htmlspecialchars($product['orderdate']); ?></td>
+                    <td><?php echo htmlspecialchars($product['formatted_orderdate']); ?></td> 
                     <td class="<?php echo $product['status'] == 'pending' ? 'pending-status' : ''; ?> pending-status">
                         <?php echo htmlspecialchars($product['status']); ?>
                     </td>
@@ -204,6 +230,12 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <?php endforeach; ?>
         </tbody>
     </table>
+
+    <!-- Display the total price -->
+    <div class="cart-total">
+        <strong>Total Price: </strong><?php echo number_format($totalPrice, 2); ?>
+    </div>
 </div>
+
 </body>
 </html>
