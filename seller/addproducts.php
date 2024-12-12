@@ -21,6 +21,74 @@
             100% { background-position: 0% 50%; }
         }
 
+        
+        .header .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            display: flex; 
+            align-items: center; 
+        }
+
+        .header .logo .logo-image {
+            width: 30px; 
+            height: 30px; 
+            margin-right: 10px; 
+            animation: pumpAnimation 1.5s infinite ease-in-out;
+        }
+
+        @keyframes pumpAnimation {
+            0% {
+                transform: scale(1); 
+            }
+            50% {
+                transform: scale(1.2); 
+            }
+            100% {
+                transform: scale(1); 
+            }
+        }
+
+        .header {
+            width: 100%;
+            background-color: #A87676;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .header .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .header nav {
+            display: flex;
+            justify-content: flex-start; 
+            gap: 10px; 
+            padding-right: 45px; 
+        }
+
+
+        .header a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            padding: 10px 10px;
+            border-radius: 4px;
+        }
+
+        .header a:hover {
+            background-color: #CA8787;
+        }
+
         .edit-form-container {
             background-color: rgba(255, 255, 255, 0.8);
             padding: 10px;
@@ -29,6 +97,7 @@
             max-width: 550px;
             margin: 0 auto;
             margin-bottom: 60px;
+            margin-top: 20px;
         }
 
         h2 {
@@ -105,6 +174,19 @@
     </style>
 </head>
 <body>
+<header class="header">
+    <!-- Logo section (on the left) -->
+    <div class="logo">
+    <img src="../images/logo.png" class="logo-image">
+    FitFusion
+</div>
+
+    <nav>
+        <a href="dashboard.php"><b>Dashboard</b></a>
+        <a href="addproducts.php"><b>Add Product</b></a>
+        <a href="login.php"><b>Logout</b></a>
+    </nav>
+</header>
     <div class="edit-form-container">
         <h2>Add Product</h2>
 

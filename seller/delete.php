@@ -1,5 +1,13 @@
 <?php
 include '../serverdb/connectSeller.php';
+session_start();
+
+if (!isset($_SESSION['sellerid'])) {
+    header('Location: login.php');
+    exit();
+}
+
+$buyerid = $_SESSION['sellerid'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Retrieve product ID from the form
@@ -15,6 +23,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Get the current image path
             $currentImagePath = $product['image'];
 
+            $db->exec("SET app.user_id TO $buyerid");
+            $db->exec("SET app.user_type TO 'seller'");
+            
             // Delete the product from the database
             $deleteStmt = $db->prepare("DELETE FROM PRODUCTS WHERE productid = ?");
             $deleteStmt->execute([$product_id]);

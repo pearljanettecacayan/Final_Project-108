@@ -115,9 +115,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
             padding: 30px 40px; 
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
-            margin-top: 50px; 
-            margin-bottom: 50px;
-            min-height: 500px; 
+            margin-top: 60px; 
         }
 
         .cart-title {
@@ -151,6 +149,10 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
             padding: 10px 15px;
             border-radius: 5px;
             cursor: pointer;
+        }
+
+        .pending-status {
+            color: red ;
         }
     </style>
 </head>
@@ -189,13 +191,13 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <td><?php echo htmlspecialchars($product['productname']); ?></td>
                     <td><?php echo htmlspecialchars($product['price']); ?></td>
                     <td><?php echo htmlspecialchars($product['orderdate']); ?></td>
-                    <td class="<?php echo $product['status'] == 'pending' ? 'pending-status' : ''; ?>">
+                    <td class="<?php echo $product['status'] == 'pending' ? 'pending-status' : ''; ?> pending-status">
                         <?php echo htmlspecialchars($product['status']); ?>
                     </td>
                     <td>
                         <form action="delete_order.php" method="POST" onsubmit="return confirm('Are you sure you want to delete this item?');">
                             <input type="hidden" name="orderid" value="<?php echo htmlspecialchars($product['orderid']); ?>">
-                            <button type="submit" class="delete-button">Delete</button>
+                            <button type="submit" class="delete-button">Cancel</button>
                         </form>
                     </td>
                 </tr>

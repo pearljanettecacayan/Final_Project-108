@@ -203,40 +203,119 @@ $adminid = $_SESSION['adminid'];
     </div>
 
    <!-- Logs Section -->
-    <div class="logs-section">
-        <h2>Recent Logs</h2>
-        <?php
-        // Fetch recent logs including usertype
-        $logsStmt = $db->query("SELECT action, changetable, actiondate, usertype, userid FROM LOGS ORDER BY ActionDate DESC");
-        $logs = $logsStmt->fetchAll(PDO::FETCH_ASSOC);
+   <div class="logs-section">
+    <h2>Recent Logs</h2>
+    <?php
+    // Fetch recent logs including usertype and action date
+    $logsStmt = $db->query("SELECT logid, action, changetable, actiondate, usertype, userid FROM LOGS ORDER BY actiondate DESC LIMIT 10");
+    $logs = $logsStmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if ($logs): ?>
+    if ($logs): ?>
+        <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+                <tr>
+                    <th style="padding: 8px; background-color: #A87676; color: white;">Usertype</th>
+                    <th style="padding: 8px; background-color: #A87676; color: white;">Userid</th>
+                    <th style="padding: 8px; background-color: #A87676; color: white;">Action</th>
+                    <th style="padding: 8px; background-color: #A87676; color: white;">Table</th>
+                    <th style="padding: 8px; background-color: #A87676; color: white;">Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($logs as $log): 
+                    // Format ActionDate using DateTime
+                    $formattedDate = (new DateTime($log['actiondate']))->format('l, F d, Y H:i:s');
+                ?>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($log['usertype']); ?></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($log['userid']); ?></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($log['action']); ?></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($log['changetable']); ?></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><?php echo $formattedDate; ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php else: ?>
+        <p>No recent logs available.</p>
+    <?php endif; ?>
+</div>
+
+    <!-- order-summary-section -->
+<div class="order-summary-section">
+    <h2>Order Summary</h2>
+    <?php
+    // Fetch data from the OrderSummary view with formatted order date
+    try {
+        $orderStmt = $db->query("SELECT orderid, buyername, productname, price, TO_CHAR(orderdate, 'FMDay, FMMonth DD, YYYY HH24:MI:SS') AS formatted_orderdate, status FROM OrderSummary");
+        $orders = $orderStmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($orders): ?>
             <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
                 <thead>
                     <tr>
-                        <th style="padding: 8px; background-color: #A87676; color: white;">Usertype</th>
-                        <th style="padding: 8px; background-color: #A87676; color: white;">Userid</th>
-                        <th style="padding: 8px; background-color: #A87676; color: white;">Action</th>
-                        <th style="padding: 8px; background-color: #A87676; color: white;">Table</th>
-                        <th style="padding: 8px; background-color: #A87676; color: white;">Date</th>
+                        <th style="padding: 8px; background-color: #A87676; color: white;">Order ID</th>
+                        <th style="padding: 8px; background-color: #A87676; color: white;">Buyer Name</th>
+                        <th style="padding: 8px; background-color: #A87676; color: white;">Product Name</th>
+                        <th style="padding: 8px; background-color: #A87676; color: white;">Price</th>
+                        <th style="padding: 8px; background-color: #A87676; color: white;">Order Date</th>
+                        <th style="padding: 8px; background-color: #A87676; color: white;">Status</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($logs as $log): ?>
+                    <?php foreach ($orders as $order): ?>
                         <tr>
-                            <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($log['usertype']); ?></td>
-                            <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($log['userid']); ?></td>
-                            <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($log['action']); ?></td>
-                            <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($log['changetable']); ?></td>
-                            <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($log['actiondate']); ?></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($order['orderid']); ?></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($order['buyername']); ?></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($order['productname']); ?></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($order['price']); ?></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($order['formatted_orderdate']); ?></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($order['status']); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
         <?php else: ?>
-            <p>No recent logs available.</p>
-        <?php endif; ?>
-    </div>
+            <p>No orders found.</p>
+        <?php endif;
+    } catch (Exception $e) {
+        echo "<p>Error fetching order summary: " . htmlspecialchars($e->getMessage()) . "</p>";
+    }
+    ?>
+</div>
+
+
+<!-- Most Availed Products Section -->
+<div class="table-valued-section">
+    <h2>Top Selling Products</h2>
+    <?php
+    // Fetch top-selling products from the materialized view
+    $topSellingStmt = $db->query("SELECT * FROM MostAvailedProducts");
+    $MostAvailedProducts = $topSellingStmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if ($MostAvailedProducts): ?>
+        <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+                <tr>
+                    <th style="padding: 8px; background-color: #A87676; color: white;">Product Name</th>
+                    <th style="padding: 8px; background-color: #A87676; color: white;">Total Orders</th>
+                    <th style="padding: 8px; background-color: #A87676; color: white;">Total Revenue</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($MostAvailedProducts as $product): ?>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($product['productname']); ?></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($product['totalorders']); ?></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($product['totalrevenue']); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php else: ?>
+        <p>No top-selling products available.</p>
+    <?php endif; ?>
+</div>
 
     <!-- Table-Valued Function Section -->
     <div class="table-valued-section">
@@ -276,81 +355,7 @@ $adminid = $_SESSION['adminid'];
         <?php endif; ?>
     </div>
 
-    <div class="order-summary-section">
-    <h2>Order Summary</h2>
-    <?php
-    // Fetch data from the OrderSummary view
-    try {
-        $orderStmt = $db->query("SELECT * FROM OrderSummary");
-        $orders = $orderStmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if ($orders): ?>
-            <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
-                <thead>
-                    <tr>
-                        <th style="padding: 8px; background-color: #A87676; color: white;">Order ID</th>
-                        <th style="padding: 8px; background-color: #A87676; color: white;">Buyer Name</th>
-                        <th style="padding: 8px; background-color: #A87676; color: white;">Product Name</th>
-                        <th style="padding: 8px; background-color: #A87676; color: white;">Price</th>
-                        <th style="padding: 8px; background-color: #A87676; color: white;">Order Date</th>
-                        <th style="padding: 8px; background-color: #A87676; color: white;">Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($orders as $order): ?>
-                        <tr>
-                            <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($order['orderid']); ?></td>
-                            <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($order['buyername']); ?></td>
-                            <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($order['productname']); ?></td>
-                            <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($order['price']); ?></td>
-                            <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($order['orderdate']); ?></td>
-                            <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($order['status']); ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        <?php else: ?>
-            <p>No orders found.</p>
-        <?php endif;
-    } catch (Exception $e) {
-        echo "<p>Error fetching order summary: " . htmlspecialchars($e->getMessage()) . "</p>";
-    }
-    ?>
-    </div>
-
-    <!-- Top Selling Products Section -->
-    <div class="table-valued-section">
-        <h2>Top Selling Products</h2>
-        <?php
-        // Fetch top-selling products from the materialized view
-        $topSellingStmt = $db->query("SELECT * FROM TopSellingProducts");
-        $topSellingProducts = $topSellingStmt->fetchAll(PDO::FETCH_ASSOC);
-
-        if ($topSellingProducts): ?>
-            <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
-                <thead>
-                    <tr>
-                        <th style="padding: 8px; background-color: #A87676; color: white;">Product ID</th>
-                        <th style="padding: 8px; background-color: #A87676; color: white;">Product Name</th>
-                        <th style="padding: 8px; background-color: #A87676; color: white;">Total Orders</th>
-                        <th style="padding: 8px; background-color: #A87676; color: white;">Total Revenue</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($topSellingProducts as $product): ?>
-                        <tr>
-                            <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($product['productid']); ?></td>
-                            <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($product['productname']); ?></td>
-                            <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($product['totalorders']); ?></td>
-                            <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($product['totalrevenue']); ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        <?php else: ?>
-            <p>No top-selling products available.</p>
-        <?php endif; ?>
-    </div>
 </div>
 </body>
 </html>
